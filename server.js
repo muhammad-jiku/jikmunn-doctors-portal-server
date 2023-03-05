@@ -13,10 +13,13 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('Hello there!');
+  res.status(200).json({
+    message: 'Hello there!',
+  });
 });
 
-const uri = `mongodb+srv://${process.env.DB_AUTHOR}:${process.env.DB_PASSWORD}@cluster0.w6ky9.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `${process.env.DB_URI}`;
+// `mongodb+srv://${process.env.DB_AUTHOR}:${process.env.DB_PASS}@cluster0.w6ky9.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -215,7 +218,7 @@ const run = async () => {
     app.post('/createpaymentintent', verifyJWT, async (req, res) => {
       const service = req.body;
       const fee = service?.fee;
-      const amount = fee * 100;
+      const amount = fee * 0.01;
       // Create a PaymentIntent with the order amount and currency
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount,
