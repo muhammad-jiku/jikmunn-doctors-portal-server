@@ -43,8 +43,8 @@ const verifyJWT = (req, res, next) => {
         .send({ message: 'Access to this route is forbidden' });
     }
     req.decoded = decoded;
-    console.log('decoded ', decoded);
-    console.log('Auth header ', authHeader);
+    // console.log('decoded ', decoded);
+    // console.log('Auth header ', authHeader);
     next();
   });
 };
@@ -189,7 +189,7 @@ const run = async () => {
     app.post('/booking', async (req, res) => {
       // create a appointment to insert in booking colllection
       const appointmentBooking = req.body;
-      console.log(appointmentBooking);
+      // console.log(appointmentBooking);
 
       const query = {
         treatment: appointmentBooking?.treatment,
@@ -218,7 +218,7 @@ const run = async () => {
     app.post('/createpaymentintent', verifyJWT, async (req, res) => {
       const service = req.body;
       const fee = service?.fee;
-      const amount = fee * 0.01;
+      const amount = fee * 10;
       // Create a PaymentIntent with the order amount and currency
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount,
