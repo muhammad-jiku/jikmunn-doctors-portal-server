@@ -63,6 +63,7 @@ const run = async () => {
     const paymentsCollection = client
       .db('doctorsPortal')
       .collection('payments');
+    const reviewsCollection = client.db('doctorsPortal').collection('reviews');
 
     // verifying admin
     const verifyAdmin = async (req, res, next) => {
@@ -185,6 +186,13 @@ const run = async () => {
       res.send(doctors);
     });
 
+    // displaying all reviews
+    app.get('/reviews', async (req, res) => {
+      const query = {};
+      const reviews = await reviewsCollection.find(query).toArray();
+      res.send(reviews);
+    });
+
     // adding booking
     app.post('/booking', async (req, res) => {
       // create a appointment to insert in booking colllection
@@ -226,6 +234,13 @@ const run = async () => {
         payment_method_types: ['card'],
       });
       res.send({ clientSecret: paymentIntent.client_secret });
+    });
+
+    // creating review
+    app.post('/review', verifyJWT, async (req, res) => {
+      const review = req.body;
+      const result = await reviewsCollection.insertOne(review);
+      res.send(result);
     });
 
     // updating users or patients account
