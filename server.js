@@ -1,3 +1,5 @@
+//  external imports
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -5,13 +7,17 @@ const jwt = require('jsonwebtoken');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
+//  port
 const port = process.env.PORT || 5000;
+
+//  app initialization
 const app = express();
 
-// middleware
+// middlewares
 app.use(express.json());
 app.use(cors());
 
+//  default response
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Hello there!',
@@ -332,6 +338,7 @@ const run = async () => {
 };
 run().catch(console.dir);
 
+//  listening to the port
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
