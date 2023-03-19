@@ -285,12 +285,16 @@ const run = async () => {
       //   email: requestedEmail,
       // });
       // if (requestedAccount?.role === 'admin') {
-      const filter = { email: email };
+      const filter = {
+        email: email,
+      };
       // this option instructs the method to create a document if no documents match the filter
       // const options = { upsert: true }; // here user is updated to be admin and no new user data is inserting that's why this is commented
       // create a document that sets the plot of the movie
       const makeAdmin = {
-        $set: { role: 'admin' },
+        $set: {
+          role: 'admin',
+        },
       };
 
       const adminsResult = await usersCollection.updateOne(filter, makeAdmin);
@@ -302,6 +306,45 @@ const run = async () => {
       //     .send({ message: 'Access to the this route is forbidden' });
       // }
     });
+
+    // removing adminRole for from users to admins
+    // using verifyJWT as middleware
+    app.patch(
+      '/user/admin/:email',
+      verifyJWT,
+      verifyAdmin,
+      async (req, res) => {
+        const email = req.params.email;
+        // const requestedEmail = req.decoded.email;
+        // const requestedAccount = await usersCollection.findOne({
+        //   email: requestedEmail,
+        // });
+        // if (requestedAccount?.role === 'admin') {
+        const filter = {
+          email: email,
+        };
+        // this option instructs the method to create a document if no documents match the filter
+        // const options = { upsert: true }; // here user is updated to be admin and no new user data is inserting that's why this is commented
+        // create a document that sets the plot of the movie
+        const removeAdmin = {
+          $set: {
+            role: 'user',
+          },
+        };
+
+        const adminsResult = await usersCollection.updateOne(
+          filter,
+          removeAdmin
+        );
+
+        res.send(adminsResult);
+        // } else {
+        //   res
+        //     .status(403)
+        //     .send({ message: 'Access to the this route is forbidden' });
+        // }
+      }
+    );
 
     // updating booking method by id and activating payment system
     app.patch('/booking/:id', verifyJWT, async (req, res) => {
