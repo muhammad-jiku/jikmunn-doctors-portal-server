@@ -64,6 +64,7 @@ const run = async () => {
     const bookingsCollection = client
       .db('doctorsPortal')
       .collection('bookings');
+    const contactCollection = client.db('doctorsPortal').collection('contacts');
     const usersCollection = client.db('doctorsPortal').collection('users');
     const doctorsCollection = client.db('doctorsPortal').collection('doctors');
     const paymentsCollection = client
@@ -246,6 +247,16 @@ const run = async () => {
     app.post('/review', verifyJWT, async (req, res) => {
       const review = req.body;
       const result = await reviewsCollection.insertOne(review);
+      res.send(result);
+    });
+
+    // connectiing with contact
+    app.post('/contact', async (req, res) => {
+      // create a appointment to insert in booking colllection
+      const contact = req.body;
+      // console.log(contact);
+
+      const result = await contactCollection.insertOne(contact);
       res.send(result);
     });
 
